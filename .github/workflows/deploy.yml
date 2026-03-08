@@ -7,6 +7,9 @@ on:
   schedule:
     - cron: '0 * * * *' # Build every hour to pick up Notion changes
 
+permissions:
+  contents: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
