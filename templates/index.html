@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prompt Gallery</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap"
+        rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1 class="logo">
+                <i class="ph-fill ph-sparkle"></i>
+                Prompt Gallery
+            </h1>
+            <p class="subtitle">A visual collection of curated AI prompts</p>
+        </div>
+    </header>
+
+    <main class="gallery-container">
+        {% if articles %}
+        <div class="masonry-grid" id="masonry-grid">
+            {% for article in articles %}
+            <div class="masonry-item">
+                <div class="card" {% if not article.image_token %}style="padding-top: 1rem;" {% endif %}>
+                    {% if article.image_token %}
+                    <div class="card-image-wrapper">
+                        <img src="{{ article.image_token }}" alt="{{ article.title }}" loading="lazy" class="card-image"
+                            onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'400\' height=\'400\' style=\'background-color:%231f1f1f\'></svg>'">
+                        <div class="card-overlay">
+                            <button class="copy-btn" data-prompt="{{ article.prompt }}">
+                                <i class="ph ph-copy"></i> Copy Prompt
+                            </button>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="card-content">
+                        <p class="card-prompt-preview" style="-webkit-line-clamp: 6; line-clamp: 6;">{{ article.prompt
+                            }}</p>
+                        {% if not article.image_token and article.prompt %}
+                        <button class="copy-btn text-only-copy" data-prompt="{{ article.prompt }}"
+                            style="margin-top: 1rem; width: 100%; border: 1px solid var(--border-color); color: var(--text-primary);">
+                            <i class="ph ph-copy"></i> Copy Prompt
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="ph ph-images empty-icon"></i>
+            <h2>No prompts found</h2>
+            <p>Try selecting a different tag or check your data source.</p>
+        </div>
+        {% endif %}
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <i class="ph-fill ph-check-circle"></i> Prompt copied to clipboard!
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>
